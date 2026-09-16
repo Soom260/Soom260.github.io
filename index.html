@@ -21,9 +21,9 @@
     --ink:#1d1d1f;
     --muted:#6e6e73;
     --line:#d2d2d7;
-    --accent:#0071e3;
+    --accent:#af52de;
     --nav-bg:rgba(255,255,255,0.72);
-    --glow:rgba(0,113,227,0.16);
+    --glow:rgba(175,82,222,0.16);
   }
   @media (prefers-color-scheme:dark){
     :root:not([data-theme="light"]){
@@ -33,9 +33,9 @@
       --ink:#f5f5f7;
       --muted:#86868b;
       --line:#2a2a2c;
-      --accent:#2997ff;
+      --accent:#bf5af2;
       --nav-bg:rgba(0,0,0,0.7);
-      --glow:rgba(41,151,255,0.18);
+      --glow:rgba(191,90,242,0.18);
     }
   }
   :root[data-theme="dark"]{
@@ -45,9 +45,9 @@
     --ink:#f5f5f7;
     --muted:#86868b;
     --line:#2a2a2c;
-    --accent:#2997ff;
+    --accent:#bf5af2;
     --nav-bg:rgba(0,0,0,0.7);
-    --glow:rgba(41,151,255,0.18);
+    --glow:rgba(191,90,242,0.18);
   }
 
   @property --px{syntax:"<percentage>";inherits:false;initial-value:50%}
@@ -158,13 +158,13 @@
   .band--alt{background:var(--bg-alt)}
   .band--dark{
     background:
-      radial-gradient(circle 360px at var(--px,50%) var(--py,50%),rgba(41,151,255,0.25),transparent 70%),
+      radial-gradient(circle 360px at var(--px,50%) var(--py,50%),rgba(191,90,242,0.25),transparent 70%),
       #000;
     color:#f5f5f7;
     --ink:#f5f5f7;
     --muted:#a1a1a6;
     --line:#2a2a2c;
-    --accent:#2997ff;
+    --accent:#bf5af2;
     position:relative;
     overflow:hidden;
     isolation:isolate;
@@ -185,13 +185,13 @@
   .band--dark::before{
     width:min(72vw,620px);
     top:-16%;left:-12%;
-    background:radial-gradient(circle,rgba(41,151,255,0.55),transparent 66%);
+    background:radial-gradient(circle,rgba(191,90,242,0.55),transparent 66%);
     animation:drift-a 23s ease-in-out infinite;
   }
   .band--dark::after{
     width:min(66vw,560px);
     bottom:-22%;right:-14%;
-    background:radial-gradient(circle,rgba(0,209,255,0.34),transparent 66%);
+    background:radial-gradient(circle,rgba(139,92,246,0.34),transparent 66%);
     animation:drift-b 29s ease-in-out infinite;
   }
   .band--dark > .container{position:relative;z-index:1}
@@ -288,7 +288,7 @@
     text-wrap:balance;
     max-width:22ch;
   }
-  .statement em{color:#2997ff;font-style:normal}
+  .statement em{color:#bf5af2;font-style:normal}
 
   /* ---------- interests ---------- */
   .grid2{
@@ -431,7 +431,7 @@
   .btn:hover{
     filter:brightness(1.08);
     transform:scale(1.03);
-    box-shadow:0 12px 36px rgba(41,151,255,0.5),0 0 64px rgba(41,151,255,0.28);
+    box-shadow:0 12px 36px rgba(191,90,242,0.5),0 0 64px rgba(191,90,242,0.28);
   }
   .btn:hover::before{opacity:1}
   .btn--ghost{
