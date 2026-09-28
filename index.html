@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="color-scheme" content="light dark">
+<meta name="color-scheme" content="light">
 <title>최수미 — 경영·서비스기획</title>
 <meta name="description" content="최수미(Choi Soomi) — 한국외국어대학교 경영학전공. 경영·서비스기획과 사회분석, 그리고 프로젝트 kreceipt.">
 <meta name="author" content="최수미 (Choi Soomi)">
@@ -24,30 +24,6 @@
     --accent:#0071e3;
     --nav-bg:rgba(255,255,255,0.72);
     --glow:rgba(0,113,227,0.16);
-  }
-  @media (prefers-color-scheme:dark){
-    :root:not([data-theme="light"]){
-      --bg:#000000;
-      --bg-alt:#0b0b0d;
-      --card:#1a1a1c;
-      --ink:#f5f5f7;
-      --muted:#86868b;
-      --line:#2a2a2c;
-      --accent:#2997ff;
-      --nav-bg:rgba(0,0,0,0.7);
-      --glow:rgba(41,151,255,0.18);
-    }
-  }
-  :root[data-theme="dark"]{
-    --bg:#000000;
-    --bg-alt:#0b0b0d;
-    --card:#1a1a1c;
-    --ink:#f5f5f7;
-    --muted:#86868b;
-    --line:#2a2a2c;
-    --accent:#2997ff;
-    --nav-bg:rgba(0,0,0,0.7);
-    --glow:rgba(41,151,255,0.18);
   }
 
   @property --px{syntax:"<percentage>";inherits:false;initial-value:50%}
@@ -642,6 +618,11 @@
         langBtn.textContent = en ? 'KO' : 'EN';
         langBtn.setAttribute('aria-label', en ? '한국어로 보기' : 'View in English');
         try { localStorage.setItem('lang', lang); } catch (e) {}
+        if (voiceOn){
+          if (canSpeak) window.speechSynthesis.cancel();
+          narrated = typeof WeakSet !== 'undefined' ? new WeakSet() : null;
+          narrateVisibleNow();
+        }
       }
       var saved = null;
       try { saved = localStorage.getItem('lang'); } catch (e) {}
