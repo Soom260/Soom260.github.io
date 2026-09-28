@@ -618,11 +618,7 @@
         langBtn.textContent = en ? 'KO' : 'EN';
         langBtn.setAttribute('aria-label', en ? '한국어로 보기' : 'View in English');
         try { localStorage.setItem('lang', lang); } catch (e) {}
-        if (voiceOn){
-          if (canSpeak) window.speechSynthesis.cancel();
-          narrated = typeof WeakSet !== 'undefined' ? new WeakSet() : null;
-          narrateVisibleNow();
-        }
+        if (voiceOn && currentIndex !== -1) playIndex(currentIndex);
       }
       var saved = null;
       try { saved = localStorage.getItem('lang'); } catch (e) {}
@@ -631,37 +627,51 @@
         setLang(document.documentElement.lang === 'en' ? 'ko' : 'en');
       });
 
-      /* ---- scroll voice narration (reads each section's description aloud) ---- */
+      /* ---- scroll voice narration: reads the section in view, auto-advances to
+         the next when it finishes, and re-reads a section whenever it becomes
+         the dominant one in view again (including scrolling back up). ---- */
       var voiceBtn = document.getElementById('voiceToggle');
-      var narrateEls = document.querySelectorAll('[data-narrate]');
+      var narrateList = Array.prototype.slice.call(document.querySelectorAll('[data-narrate]'));
       var canSpeak = 'speechSynthesis' in window;
       var voiceOn = false;
-      var narrated = typeof WeakSet !== 'undefined' ? new WeakSet() : null;
-      function speak(text){
-        if (!canSpeak || !text) return;
-        var utter = new SpeechSynthesisUtterance(text);
+      var currentIndex = -1;
+
+      function narrateText(el){
+        var en = document.documentElement.lang === 'en';
+        return en ? (el.getAttribute('data-narrate-en') || el.getAttribute('data-narrate')) : el.getAttribute('data-narrate');
+      }
+      function dominantIndex(){
+        var center = window.innerHeight / 2, best = -1, bestDist = Infinity;
+        narrateList.forEach(function(el, i){
+          var r = el.getBoundingClientRect();
+          if (r.bottom <= 0 || r.top >= window.innerHeight) return;
+          var dist = Math.abs((r.top + r.bottom) / 2 - center);
+          if (dist < bestDist){ bestDist = dist; best = i; }
+        });
+        return best;
+      }
+      function playIndex(i){
+        if (!canSpeak || i < 0 || i >= narrateList.length) return;
+        currentIndex = i;
+        window.speechSynthesis.cancel();
+        var utter = new SpeechSynthesisUtterance(narrateText(narrateList[i]));
         utter.lang = document.documentElement.lang === 'en' ? 'en-US' : 'ko-KR';
+        utter.onend = function(){
+          if (!voiceOn || currentIndex !== i || i + 1 >= narrateList.length) return;
+          narrateList[i + 1].scrollIntoView({ behavior:'smooth', block:'start' });
+        };
         window.speechSynthesis.speak(utter);
       }
-      function narrateEl(el){
-        if (!voiceOn || (narrated && narrated.has(el))) return;
-        if (narrated) narrated.add(el);
-        var en = document.documentElement.lang === 'en';
-        speak(en ? (el.getAttribute('data-narrate-en') || el.getAttribute('data-narrate')) : el.getAttribute('data-narrate'));
-      }
-      var voiceIO = null;
-      if ('IntersectionObserver' in window){
-        voiceIO = new IntersectionObserver(function(entries){
-          entries.forEach(function(e){ if (e.isIntersecting) narrateEl(e.target); });
-        }, { threshold:0.35 });
-        narrateEls.forEach(function(el){ voiceIO.observe(el); });
-      }
-      function narrateVisibleNow(){
-        narrateEls.forEach(function(el){
-          var r = el.getBoundingClientRect();
-          if (r.top < window.innerHeight && r.bottom > 0) narrateEl(el);
+      var voiceScrollQueued = false;
+      window.addEventListener('scroll', function(){
+        if (!voiceOn || voiceScrollQueued) return;
+        voiceScrollQueued = true;
+        requestAnimationFrame(function(){
+          voiceScrollQueued = false;
+          var idx = dominantIndex();
+          if (idx !== -1 && idx !== currentIndex) playIndex(idx);
         });
-      }
+      }, { passive:true });
       function setVoice(on){
         voiceOn = on && canSpeak;
         voiceBtn.classList.toggle('is-on', voiceOn);
@@ -671,8 +681,13 @@
           ? (en ? 'Turn off scroll voice guide' : '스크롤 음성 안내 끄기')
           : (en ? 'Turn on scroll voice guide' : '스크롤 음성 안내 켜기'));
         try { localStorage.setItem('voice', voiceOn ? '1' : '0'); } catch (e) {}
-        if (!voiceOn && canSpeak) window.speechSynthesis.cancel();
-        if (voiceOn) narrateVisibleNow();
+        if (!voiceOn){
+          if (canSpeak) window.speechSynthesis.cancel();
+          currentIndex = -1;
+        } else {
+          var idx = dominantIndex();
+          playIndex(idx === -1 ? 0 : idx);
+        }
       }
       if (voiceBtn){
         if (!canSpeak) voiceBtn.disabled = true;
