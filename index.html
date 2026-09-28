@@ -117,7 +117,8 @@
     transition:color .2s ease;
   }
   .nav__links a:hover{color:var(--ink)}
-  .lang-toggle{
+  .nav__toggles{display:flex;align-items:center;gap:0.5rem}
+  .lang-toggle,.voice-toggle{
     font-family:inherit;
     font-size:0.78rem;
     font-weight:700;
@@ -132,6 +133,11 @@
     transition:background-color .2s ease,border-color .2s ease,color .2s ease;
   }
   .lang-toggle:hover{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+  .voice-toggle{display:inline-flex;align-items:center;gap:0.32rem}
+  .voice-toggle:hover{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+  .voice-toggle.is-on{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .voice-toggle__label{display:none}
+  @media (min-width:480px){.voice-toggle__label{display:inline}}
   :focus-visible{outline:2px solid var(--accent);outline-offset:4px;border-radius:3px}
 
   /* ---------- shared ---------- */
@@ -498,13 +504,18 @@
         <a href="#interests" data-en="Interests">관심사</a>
         <a href="#project" data-en="Project">프로젝트</a>
         <a href="#contact" data-en="Contact">연락처</a>
-        <button type="button" class="lang-toggle" aria-label="View in English">EN</button>
+        <span class="nav__toggles">
+          <button type="button" class="voice-toggle" id="voiceToggle" aria-pressed="false" aria-label="스크롤 음성 안내 켜기">
+            <span aria-hidden="true">🔊</span><span class="voice-toggle__label" data-en="Voice">음성</span>
+          </button>
+          <button type="button" class="lang-toggle" aria-label="View in English">EN</button>
+        </span>
       </nav>
     </div>
   </header>
 
   <main>
-    <section class="hero">
+    <section class="hero" data-narrate="포트폴리오 홈페이지 상단입니다. 최수미, 한국외국어대학교 경영학전공. 사람의 선택과 소비를 데이터로 읽고, 그것을 실제 서비스로 옮깁니다." data-narrate-en="Top of the portfolio homepage. Choi Soomi, Business Administration at Hankuk University of Foreign Studies. I read people's choices and spending as data, and turn them into real services.">
       <p class="eyebrow">Portfolio</p>
       <h1 data-en="Choi Soomi<span class='hero__en'>최수미</span>">최수미<span class="hero__en">Choi Soomi</span></h1>
       <p class="hero__affil" data-en="Hankuk University of Foreign Studies · Business Administration">한국외국어대학교 · 경영학전공</p>
@@ -512,14 +523,14 @@
       <a class="scroll-hint" href="#about">SCROLL <span>↓</span></a>
     </section>
 
-    <section class="band band--dark" id="about">
+    <section class="band band--dark" id="about" data-narrate="소개 섹션. 경영학을 기반으로 서비스기획과 사회분석을 함께 합니다. 문제를 정의하고, 사용자와 데이터로 답을 찾아 실행 가능한 제품으로 만듭니다." data-narrate-en="About section. Built on business studies, I combine service planning and social analysis. I define the problem, find answers through users and data, and shape them into a workable product.">
       <div class="container reveal">
         <p class="eyebrow" data-en="About">소개</p>
         <p class="statement" data-en="Built on business studies, I combine <em>service planning</em> and <em>social analysis</em>. I define the problem, find answers through users and data, and shape them into a workable product.">경영학을 기반으로 <em>서비스기획</em>과 <em>사회분석</em>을 함께 합니다. 문제를 정의하고, 사용자와 데이터로 답을 찾아 실행 가능한 제품으로 만듭니다.</p>
       </div>
     </section>
 
-    <section class="band" id="interests">
+    <section class="band" id="interests" data-narrate="관심사 섹션. 무엇에 집중하나. 첫째, 경영과 서비스기획: 문제 정의부터 사용자 흐름과 핵심 지표 설계까지, 아이디어를 검증 가능한 형태로 구체화합니다. 둘째, 사회분석: 설문과 통계, 정성 데이터를 함께 활용해 사람들의 행동과 사회적 맥락을 읽습니다." data-narrate-en="Interests section. What I focus on. First, Business and Service Planning: from defining the problem to mapping user flows and key metrics, turning ideas into something testable. Second, Social Analysis: using surveys, statistics and qualitative data together to read how people behave and the social context around it.">
       <div class="container">
         <div class="reveal">
           <p class="eyebrow" data-en="Interests">관심사</p>
@@ -538,7 +549,7 @@
       </div>
     </section>
 
-    <section class="band band--alt" id="project">
+    <section class="band band--alt" id="project" data-narrate="프로젝트 섹션. 크리시트, 영수증으로 쓰는 하루 기록. 매일의 영수증을 사진과 짧은 메모로 남기고, 가까운 친구들과 그날의 소비를 나누는 모바일 앱입니다. 문제의식은 소비는 매일 일어나지만 대부분 흔적 없이 사라지고 기록은 혼자만의 숙제로 남는다는 것이고, 접근은 영수증을 기록의 최소 단위로 삼아 공유와 대화가 자연스럽게 따라오도록 설계하는 것입니다. 현재 상태는 컨셉 단계로, 사용자 시나리오와 핵심 화면을 정리하고 있습니다." data-narrate-en="Project section. kreceipt, a daily journal written in receipts. A mobile app for keeping each day's receipts with a photo and a short note, and sharing the day's spending with close friends. The problem: spending happens every day but mostly disappears without a trace, and logging it stays a solo chore. The approach: treat a receipt as the smallest unit of a record, so sharing and conversation follow naturally. Current status: concept stage, defining user scenarios and core screens.">
       <div class="container project">
         <div class="reveal">
           <p class="eyebrow" data-en="Project">프로젝트</p>
@@ -547,7 +558,7 @@
         </div>
         <div class="project__body">
           <div class="receipt-wrap reveal">
-            <div class="receipt" aria-hidden="true">
+            <div class="receipt" role="img" data-alt="흰 영수증 모양 카드 이미지. 상단에 KRECEIPT 로고와 2026년 9월 9일 화요일 날짜. 아메리카노 2잔 9,000원, 김밥 3,500원, 버스 1,500원의 지출 내역과 합계 14,000원, '오늘도 잘 썼다'는 메모, 하단에 바코드 무늬가 그려져 있다." data-alt-en="A white receipt-shaped card image. KRECEIPT logo at the top, dated Tue, Sep 9 2026. Spending items: Americano x2 9,000 won, Kimbap 3,500 won, Bus 1,500 won, total 14,000 won, the note 'spent it well today', and a barcode pattern at the bottom." aria-label="흰 영수증 모양 카드 이미지. 상단에 KRECEIPT 로고와 2026년 9월 9일 화요일 날짜. 아메리카노 2잔 9,000원, 김밥 3,500원, 버스 1,500원의 지출 내역과 합계 14,000원, '오늘도 잘 썼다'는 메모, 하단에 바코드 무늬가 그려져 있다.">
               <div class="receipt__brand">KRECEIPT</div>
               <div class="receipt__meta">2026-09-09 · TUE</div>
               <hr class="receipt__rule">
@@ -581,7 +592,7 @@
       </div>
     </section>
 
-    <section class="band band--dark contact" id="contact">
+    <section class="band band--dark contact" id="contact" data-narrate="연락처 섹션. 함께 이야기해요. 제안이나 문의는 이메일로 편하게 연락 주세요. 이메일 버튼과 깃허브 버튼이 있습니다." data-narrate-en="Contact section. Let's talk. For proposals or questions, feel free to reach out by email. There is an email button and a GitHub button.">
       <div class="container reveal">
         <p class="eyebrow" data-en="Contact">연락처</p>
         <h2 class="contact__title" data-en="Let's talk">함께 이야기해요</h2>
@@ -617,10 +628,14 @@
       var i18n = document.querySelectorAll('[data-en]');
       i18n.forEach(function(el){ el.setAttribute('data-ko', el.innerHTML); });
       var titles = { ko: '최수미 — 경영·서비스기획', en: 'Choi Soomi — Business & Service Planning' };
+      var altEls = document.querySelectorAll('[data-alt-en]');
       function setLang(lang){
         var en = lang === 'en';
         i18n.forEach(function(el){
           el.innerHTML = en ? el.getAttribute('data-en') : el.getAttribute('data-ko');
+        });
+        altEls.forEach(function(el){
+          el.setAttribute('aria-label', en ? el.getAttribute('data-alt-en') : el.getAttribute('data-alt'));
         });
         document.documentElement.lang = en ? 'en' : 'ko';
         document.title = en ? titles.en : titles.ko;
@@ -634,6 +649,57 @@
       langBtn.addEventListener('click', function(){
         setLang(document.documentElement.lang === 'en' ? 'ko' : 'en');
       });
+
+      /* ---- scroll voice narration (reads each section's description aloud) ---- */
+      var voiceBtn = document.getElementById('voiceToggle');
+      var narrateEls = document.querySelectorAll('[data-narrate]');
+      var canSpeak = 'speechSynthesis' in window;
+      var voiceOn = false;
+      var narrated = typeof WeakSet !== 'undefined' ? new WeakSet() : null;
+      function speak(text){
+        if (!canSpeak || !text) return;
+        var utter = new SpeechSynthesisUtterance(text);
+        utter.lang = document.documentElement.lang === 'en' ? 'en-US' : 'ko-KR';
+        window.speechSynthesis.speak(utter);
+      }
+      function narrateEl(el){
+        if (!voiceOn || (narrated && narrated.has(el))) return;
+        if (narrated) narrated.add(el);
+        var en = document.documentElement.lang === 'en';
+        speak(en ? (el.getAttribute('data-narrate-en') || el.getAttribute('data-narrate')) : el.getAttribute('data-narrate'));
+      }
+      var voiceIO = null;
+      if ('IntersectionObserver' in window){
+        voiceIO = new IntersectionObserver(function(entries){
+          entries.forEach(function(e){ if (e.isIntersecting) narrateEl(e.target); });
+        }, { threshold:0.35 });
+        narrateEls.forEach(function(el){ voiceIO.observe(el); });
+      }
+      function narrateVisibleNow(){
+        narrateEls.forEach(function(el){
+          var r = el.getBoundingClientRect();
+          if (r.top < window.innerHeight && r.bottom > 0) narrateEl(el);
+        });
+      }
+      function setVoice(on){
+        voiceOn = on && canSpeak;
+        voiceBtn.classList.toggle('is-on', voiceOn);
+        voiceBtn.setAttribute('aria-pressed', String(voiceOn));
+        var en = document.documentElement.lang === 'en';
+        voiceBtn.setAttribute('aria-label', voiceOn
+          ? (en ? 'Turn off scroll voice guide' : '스크롤 음성 안내 끄기')
+          : (en ? 'Turn on scroll voice guide' : '스크롤 음성 안내 켜기'));
+        try { localStorage.setItem('voice', voiceOn ? '1' : '0'); } catch (e) {}
+        if (!voiceOn && canSpeak) window.speechSynthesis.cancel();
+        if (voiceOn) narrateVisibleNow();
+      }
+      if (voiceBtn){
+        if (!canSpeak) voiceBtn.disabled = true;
+        voiceBtn.addEventListener('click', function(){ setVoice(!voiceOn); });
+        var savedVoice = null;
+        try { savedVoice = localStorage.getItem('voice'); } catch (e) {}
+        if (savedVoice === '1') setVoice(true);
+      }
 
       /* ---- pointer-reactive glow ---- */
       document.querySelectorAll('.band--dark').forEach(function(band){
