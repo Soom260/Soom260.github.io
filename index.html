@@ -28,6 +28,9 @@
     --accent:rgb(var(--acc-rgb));
     --nav-bg:rgba(255,255,255,0.72);
     --glow:rgba(0,113,227,0.16);
+    /* IBM Plex Mono 에는 한글이 없다. 한글이 굴림으로 떨어지지 않도록
+       고정폭 뒤에 본문 글꼴을 붙여 둔다 (영문·숫자는 그대로 고정폭). */
+    --mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,'Gothic A1','Apple SD Gothic Neo','Malgun Gothic',monospace;
   }
 
   @property --px{syntax:"<percentage>";inherits:false;initial-value:50%}
@@ -89,7 +92,7 @@
     inset:0;
     display:grid;
     place-items:center;
-    font-family:'IBM Plex Mono',ui-monospace,monospace;
+    font-family:var(--mono);
     font-size:clamp(1rem,4.2vw,1.9rem);
     font-weight:500;
     letter-spacing:0.42em;
@@ -193,14 +196,12 @@
     inset:0;
     display:grid;
     place-items:center;
-    font-family:'IBM Plex Mono',ui-monospace,monospace;
-    font-size:clamp(1.5rem,7vw,3.2rem);
-    font-weight:500;
-    letter-spacing:0.2em;
+    font-family:inherit;
+    font-size:clamp(2rem,9vw,4rem);
+    font-weight:800;
+    letter-spacing:-0.035em;
     color:#fff;
-    opacity:.92;
-    text-indent:0.2em;
-    text-transform:uppercase;
+    opacity:.95;
   }
 
   /* ============================================================
@@ -302,12 +303,112 @@
   @media (min-width:480px){.voice-toggle__label{display:inline}}
   :focus-visible{outline:2px solid var(--accent);outline-offset:4px;border-radius:3px}
 
+  /* ---------- 모바일 메뉴 (☰) ---------- */
+  .menu-btn{
+    display:none;
+    position:relative;
+    place-items:center;
+    width:36px;height:26px;
+    padding:0;
+    background:transparent;
+    border:1px solid var(--line);
+    border-radius:980px;
+    cursor:pointer;
+    transition:border-color .25s ease,background-color .25s ease;
+  }
+  .menu-btn:hover{border-color:var(--ink)}
+  .menu-btn i{
+    position:absolute;
+    left:10px;right:10px;
+    height:1.7px;
+    border-radius:2px;
+    background:var(--ink);
+    transition:transform .38s cubic-bezier(.76,0,.24,1);
+  }
+  .menu-btn i:nth-child(1){transform:translateY(-3.5px)}
+  .menu-btn i:nth-child(2){transform:translateY(3.5px)}
+  .menu-btn.on i:nth-child(1){transform:rotate(45deg)}
+  .menu-btn.on i:nth-child(2){transform:rotate(-45deg)}
+  @media (max-width:600px){.menu-btn{display:grid}}
+
+  .mmenu{
+    position:fixed;
+    inset:52px 0 0 0;
+    z-index:55;
+    background:rgba(255,255,255,0.94);
+    backdrop-filter:blur(22px) saturate(180%);
+    -webkit-backdrop-filter:blur(22px) saturate(180%);
+    opacity:0;
+    visibility:hidden;
+    transition:opacity .38s ease,visibility .38s;
+    overflow:hidden;
+  }
+  .mmenu.on{opacity:1;visibility:visible}
+  .mmenu::before{
+    content:"";
+    position:absolute;
+    width:min(90vw,460px);
+    aspect-ratio:1;
+    top:-18%;right:-22%;
+    border-radius:50%;
+    filter:blur(60px);
+    pointer-events:none;
+    background:radial-gradient(circle,rgba(var(--acc-rgb),.3),transparent 64%);
+    animation:drift-a 22s ease-in-out infinite;
+  }
+  @media (prefers-reduced-motion:reduce){.mmenu::before{animation:none}}
+  .mmenu__list{
+    position:relative;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+    justify-content:center;
+    gap:.2rem;
+    padding:0 clamp(1.35rem,7vw,2.5rem) 12vh;
+  }
+  .mmenu__list a{
+    position:relative;
+    display:inline-flex;
+    align-items:center;
+    gap:.85rem;
+    color:var(--ink);
+    text-decoration:none;
+    font-size:clamp(2rem,11vw,3.1rem);
+    font-weight:800;
+    letter-spacing:-0.035em;
+    line-height:1.5;
+    opacity:0;
+    transform:translateY(26px);
+    transition:opacity .55s cubic-bezier(.16,1,.3,1) calc(var(--mi,0) * .06s + .08s),
+               transform .55s cubic-bezier(.16,1,.3,1) calc(var(--mi,0) * .06s + .08s),
+               color .25s ease;
+  }
+  .mmenu.on .mmenu__list a{opacity:1;transform:none}
+  .mmenu__list a::before{
+    content:"0" counter(mi);
+    counter-increment:mi;
+    font-family:var(--mono);
+    font-size:.72rem;
+    font-weight:500;
+    letter-spacing:.1em;
+    color:var(--accent);
+    opacity:.75;
+    transform:translateY(-.55em);
+  }
+  .mmenu__list{counter-reset:mi}
+  .mmenu__list a.active{color:var(--accent)}
+  @media (prefers-reduced-motion:reduce){
+    .mmenu__list a{opacity:1;transform:none;transition:none}
+  }
+  html.menu-open{overflow:hidden}
+
   /* ============================================================
      5. 공통 타이포 / 섹션
      ============================================================ */
   .sec-head{display:flex;align-items:baseline;gap:.9rem;flex-wrap:wrap}
   .sec-num{
-    font-family:'IBM Plex Mono',ui-monospace,monospace;
+    font-family:var(--mono);
     font-size:.72rem;
     font-weight:500;
     letter-spacing:.14em;
@@ -728,7 +829,7 @@
     display:flex;flex-wrap:wrap;gap:.4rem;
   }
   .feature__tags span{
-    font-family:'IBM Plex Mono',ui-monospace,monospace;
+    font-family:var(--mono);
     font-size:.68rem;
     letter-spacing:.06em;
     text-transform:uppercase;
@@ -767,7 +868,7 @@
   .ticker--rev .ticker__track{animation-direction:reverse;animation-duration:34s}
   @keyframes slide{to{transform:translateX(-50%)}}
   .ticker__track span{
-    font-family:'IBM Plex Mono',ui-monospace,monospace;
+    font-family:var(--mono);
     font-size:clamp(.82rem,2.4vw,1.05rem);
     font-weight:500;
     letter-spacing:.16em;
@@ -834,7 +935,7 @@
   }
   .in .specs > div::before{transform:scaleX(1)}
   .specs dt{
-    font-family:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+    font-family:var(--mono);
     font-size:0.74rem;
     letter-spacing:0.05em;
     text-transform:uppercase;
@@ -854,7 +955,7 @@
     background:#fff;
     color:#1d1d1f;
     padding:1.6rem 1.5rem 1.3rem;
-    font-family:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+    font-family:var(--mono);
     font-size:0.8rem;
     line-height:1.9;
     box-shadow:0 30px 60px -20px rgba(0,0,0,0.35),0 8px 20px -8px rgba(0,0,0,0.2);
@@ -1165,11 +1266,23 @@
             <span aria-hidden="true">🔊</span><span class="voice-toggle__label" data-en="Voice">음성</span>
           </button>
           <button type="button" class="lang-toggle" aria-label="View in English">EN</button>
+          <button type="button" class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="mobileMenu" aria-label="메뉴 열기">
+            <i aria-hidden="true"></i><i aria-hidden="true"></i>
+          </button>
         </span>
         <span class="nav__ind" id="navInd" aria-hidden="true"></span>
       </nav>
     </div>
   </header>
+
+  <div class="mmenu" id="mobileMenu">
+    <nav class="mmenu__list" aria-label="섹션 바로가기">
+      <a href="#about" style="--mi:0" data-en="About">소개</a>
+      <a href="#interests" style="--mi:1" data-en="Interests">관심사</a>
+      <a href="#project" style="--mi:2" data-en="Project">프로젝트</a>
+      <a href="#contact" style="--mi:3" data-en="Contact">연락처</a>
+    </nav>
+  </div>
 
   <main>
     <section class="hero" id="home" data-narrate="포트폴리오 홈페이지 상단입니다. 최수미, 한국외국어대학교 경영학전공. 사람의 선택과 소비를 데이터로 읽고, 그것을 실제 서비스로 옮깁니다." data-narrate-en="Top of the portfolio homepage. Choi Soomi, Business Administration at Hankuk University of Foreign Studies. I read people's choices and spending as data, and turn them into real services.">
@@ -1493,6 +1606,8 @@
       var heroGrid = document.getElementById('heroGrid');
       var sections = [].slice.call(document.querySelectorAll('main > section'));
       var navA = [].slice.call(document.querySelectorAll('.nav__links a[href^="#"]'));
+      /* 위쪽 메뉴 + 모바일 메뉴 링크 전부 */
+      var jumpLinks = navA.concat([].slice.call(document.querySelectorAll('.mmenu__list a[href^="#"]')));
       var navInd = document.getElementById('navInd');
       var lastY = window.scrollY;
       var ticking = false;
@@ -1530,10 +1645,10 @@
         });
         if (active){
           var link = null;
-          navA.forEach(function(a){
+          jumpLinks.forEach(function(a){
             var on = a.getAttribute('href') === '#' + active.id;
             a.classList.toggle('active', on);
-            if (on) link = a;
+            if (on && navA.indexOf(a) !== -1) link = a;
           });
           moveInd(link);
         }
@@ -1552,6 +1667,35 @@
         });
       }
 
+      /* ---- 5-1. 모바일 ☰ 메뉴 ---- */
+      var menuBtn = document.getElementById('menuBtn');
+      var mmenu = document.getElementById('mobileMenu');
+
+      function setMenu(open){
+        if (!menuBtn || !mmenu) return;
+        mmenu.classList.toggle('on', open);
+        menuBtn.classList.toggle('on', open);
+        menuBtn.setAttribute('aria-expanded', String(open));
+        var en = document.documentElement.lang === 'en';
+        menuBtn.setAttribute('aria-label', open
+          ? (en ? 'Close menu' : '메뉴 닫기')
+          : (en ? 'Open menu' : '메뉴 열기'));
+        root.classList.toggle('menu-open', open);
+      }
+
+      if (menuBtn && mmenu){
+        menuBtn.addEventListener('click', function(){
+          setMenu(!mmenu.classList.contains('on'));
+        });
+        document.addEventListener('keydown', function(e){
+          if (e.key === 'Escape' && mmenu.classList.contains('on')) setMenu(false);
+        });
+        /* 화면이 넓어지면 메뉴를 닫는다 (위쪽 메뉴가 다시 보이므로) */
+        window.addEventListener('resize', function(){
+          if (window.innerWidth > 600) setMenu(false);
+        });
+      }
+
       /* ---- 6. 메뉴를 누르면 커튼이 지나가며 화면이 바뀐다 ---- */
       var wipe = document.getElementById('wipe');
       var wipeLabel = document.getElementById('wipeLabel');
@@ -1565,12 +1709,14 @@
         root.style.scrollBehavior = prev;
       }
 
-      navA.forEach(function(a){
+      jumpLinks.forEach(function(a){
         a.addEventListener('click', function(ev){
           var target = document.querySelector(a.getAttribute('href'));
-          if (!target || !wipe || reduced || !wipe.animate) return;
+          if (!target) return;
+          if (!wipe || reduced || !wipe.animate){ setMenu(false); return; }
           ev.preventDefault();
           if (wiping) return;
+          setMenu(false);
           wiping = true;
           wipeLabel.textContent = a.textContent.trim();
 
