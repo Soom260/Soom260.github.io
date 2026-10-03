@@ -1,5 +1,7 @@
 # 구글 시트(게시 CSV)를 읽어 index.html 을 만들고 GitHub Pages 에 올린다.
-#  - 시트를 고친 뒤에는 Actions 탭에서 "Run workflow" 를 눌러야 화면에 반영된다.
+#  - 매일 한국 시간 자정 무렵에 저절로 돌아간다. 그래서 시트를 고치면 다음날 사이트에 반영되고,
+#    푸터의 '마지막 업데이트' 날짜도 매일 그날 날짜로 바뀐다.
+#  - 바로 반영하고 싶으면 Actions 탭에서 "Run workflow" 를 누르면 된다.
 #  - 시트 내용이 잘못되면 main.py 가 실패로 멈추므로, 직전에 성공한 화면이 그대로 유지된다.
 name: Build and deploy site
 
@@ -7,10 +9,11 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
-  # 매일 자동으로 돌리고 싶으면 아래 3줄의 # 을 지운다.
-  # 한국 시간 08:17 = UTC 23:17 (전날)
-  # schedule:
-  #   - cron: "17 23 * * *"
+  schedule:
+    # cron 은 UTC 기준이다. UTC 15:30 = 한국 시간 다음날 00:30.
+    # 즉 매일 한국 시간 자정 30분 뒤에 돌아간다. 자정 정각(00:00)은 전 세계가 몰려
+    # 실행이 많이 밀리므로, 날짜가 바뀐 뒤 30분에 돌려 여유를 둔다.
+    - cron: "30 15 * * *"
 
 permissions:
   contents: read
