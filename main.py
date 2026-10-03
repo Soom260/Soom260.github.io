@@ -23,6 +23,8 @@ import urllib.request
 from datetime import datetime, timedelta, timezone
 
 REQUIRED_COLUMNS = ["제목", "내용", "분류", "링크", "공개"]
+# 영어 열은 있으면 쓰고 없으면 넘어간다(선택). 값이 비면 그 칸은 한국어가 그대로 보인다.
+OPTIONAL_EN_COLUMNS = {"제목": "제목_EN", "내용": "내용_EN", "분류": "분류_EN"}
 DEFAULT_CATEGORY = "기타"
 KST = timezone(timedelta(hours=9))
 
@@ -166,7 +168,17 @@ def collect_works(rows):
             problems.append("%d행: '링크' 안에 빈칸이 있습니다 → %s" % (row_number, link))
 
         works.append(
-            {"row": row_number, "title": title, "body": body, "link": link, "category": category}
+            {
+                "row": row_number,
+                "title": title,
+                "body": body,
+                "link": link,
+                "category": category,
+                # 영어 열이 있고 값이 채워져 있으면 EN 전환용으로 함께 넣는다
+                "title_en": row.get(OPTIONAL_EN_COLUMNS["제목"], ""),
+                "body_en": row.get(OPTIONAL_EN_COLUMNS["내용"], ""),
+                "category_en": row.get(OPTIONAL_EN_COLUMNS["분류"], ""),
+            }
         )
 
     if problems:
@@ -190,6 +202,16 @@ def esc(value):
     return html.escape(value, quote=True)
 
 
+def en_attr(value):
+    """영어 값이 있으면 EN 전환용 data-en 속성을 만든다. 비어 있으면 아무것도 붙이지 않는다
+    (그 칸은 영어 화면에서도 한국어가 그대로 보인다).
+
+    이 사이트의 언어 전환은 data-en 값을 innerHTML 로 넣는다(원래 영어 문구에 <em> 같은
+    태그를 쓰기 때문). 그래서 시트에 적은 < > & 가 태그로 해석되지 않도록 한 번 더
+    이스케이프한다. 두 번 거치면 화면에는 한국어 쪽과 똑같이 글자 그대로 보인다."""
+    return ' data-en="%s"' % esc(esc(value)) if value else ""
+
+
 def build_works_html(works, indent="              "):
     lines = []
     for index, work in enumerate(works):
@@ -199,9 +221,18 @@ def build_works_html(works, indent="              "):
             '%s  <a class="works__card" href="%s" target="_blank" rel="noopener">'
             % (indent, esc(work["link"]))
         )
-        lines.append('%s    <span class="works__cat">%s</span>' % (indent, esc(work["category"])))
-        lines.append('%s    <span class="works__name">%s</span>' % (indent, esc(work["title"])))
-        lines.append('%s    <span class="works__desc">%s</span>' % (indent, esc(work["body"])))
+        lines.append(
+            '%s    <span class="works__cat"%s>%s</span>'
+            % (indent, en_attr(work["category_en"]), esc(work["category"]))
+        )
+        lines.append(
+            '%s    <span class="works__name"%s>%s</span>'
+            % (indent, en_attr(work["title_en"]), esc(work["title"]))
+        )
+        lines.append(
+            '%s    <span class="works__desc"%s>%s</span>'
+            % (indent, en_attr(work["body_en"]), esc(work["body"]))
+        )
         lines.append('%s    <span class="works__go" aria-hidden="true">↗</span>' % indent)
         lines.append("%s  </a>" % indent)
         lines.append("%s</li>" % indent)
@@ -257,6 +288,12 @@ def main():
     rows = parse_rows(text, source)
     works = collect_works(rows)
     print("      공개=Y 행 %d개를 넣습니다: %s" % (len(works), ", ".join(w["title"] for w in works)))
+    en_filled = sum(1 for w in works if w["title_en"] or w["body_en"] or w["category_en"])
+    if en_filled:
+        print("      영어(EN 전환) 값이 채워진 행: %d개 / %d개" % (en_filled, len(works)))
+    else:
+        print("      영어 열이 비어 있어 EN 화면에서도 한국어가 그대로 보입니다"
+              " (제목_EN / 내용_EN / 분류_EN 열을 채우면 번역됩니다)")
 
     print("[3/4] HTML 만들기: " + args.input)
     if not os.path.exists(args.input):
