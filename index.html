@@ -944,6 +944,77 @@
   }
   .specs dd{font-size:0.98rem;color:var(--ink);font-variant-numeric:tabular-nums}
 
+  /* ---- 작업 링크: 구글 시트에서 받아 와 카드로 넣는다 (관심사 카드와 같은 감각) ---- */
+  .works{margin-top:clamp(3rem,7vw,4.5rem)}
+  .works__title{
+    font-size:clamp(1.2rem,2.8vw,1.55rem);
+    font-weight:800;
+    letter-spacing:-0.025em;
+    line-height:1.2;
+  }
+  .works__note{margin-top:0.45rem;color:var(--muted);font-size:0.95rem}
+  .works__list{
+    list-style:none;
+    margin-top:clamp(1.3rem,3vw,1.9rem);
+    display:grid;
+    /* 좁은 화면에서는 한 줄에 하나씩 — 가로로 넘치지 않는다 */
+    grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));
+    gap:clamp(0.8rem,2vw,1.2rem);
+  }
+  .works__item{min-width:0}
+  .works__card{
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    gap:0.45rem;
+    padding:1.3rem 1.4rem;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:18px;
+    color:inherit;
+    text-decoration:none;
+    transition:transform .4s cubic-bezier(.16,1,.3,1),box-shadow .4s ease,border-color .3s ease;
+  }
+  .works__card:hover{
+    transform:translateY(-4px);
+    border-color:rgba(var(--acc-rgb),.5);
+    box-shadow:0 20px 44px -24px rgba(0,88,184,.45);
+  }
+  .works__cat{
+    font-family:var(--mono);
+    font-size:0.68rem;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:var(--muted);
+  }
+  .works__name{
+    font-size:1.08rem;
+    font-weight:700;
+    letter-spacing:-0.02em;
+    line-height:1.35;
+    overflow-wrap:anywhere;
+  }
+  .works__desc{
+    color:var(--muted);
+    font-size:0.92rem;
+    line-height:1.6;
+    overflow-wrap:anywhere;
+  }
+  .works__go{
+    margin-top:auto;
+    padding-top:0.75rem;
+    font-family:var(--mono);
+    font-size:0.9rem;
+    color:var(--accent);
+    transition:transform .4s cubic-bezier(.16,1,.3,1);
+  }
+  .works__card:hover .works__go{transform:translate(3px,-3px)}
+  .js .works__item.reveal{transition-delay:var(--wd,0s)}
+  @media (prefers-reduced-motion:reduce){
+    .works__card,.works__card:hover{transform:none;transition:none}
+    .works__card:hover .works__go{transform:none}
+  }
+
   /* ============================================================
      12. 영수증 — 인쇄되듯 나온다
      ============================================================ */
@@ -1339,7 +1410,7 @@
       <div class="ticker__track" data-loop><span>문제 정의</span><span class="hot">●</span><span>사용자 흐름</span><span class="hot">●</span><span>핵심 지표</span><span class="hot">●</span><span>설문 · 통계</span><span class="hot">●</span><span>기록과 대화</span><span class="hot">●</span></div>
     </div>
 
-    <section class="band band--alt" id="project" data-narrate="프로젝트 섹션. 크리시트, 영수증으로 쓰는 하루 기록. 매일의 영수증을 사진과 짧은 메모로 남기고, 가까운 친구들과 그날의 소비를 나누는 모바일 앱입니다. 문제의식은 소비는 매일 일어나지만 대부분 흔적 없이 사라지고 기록은 혼자만의 숙제로 남는다는 것이고, 접근은 영수증을 기록의 최소 단위로 삼아 공유와 대화가 자연스럽게 따라오도록 설계하는 것입니다. 현재 상태는 컨셉 단계로, 사용자 시나리오와 핵심 화면을 정리하고 있습니다." data-narrate-en="Project section. kreceipt, a daily journal written in receipts. A mobile app for keeping each day's receipts with a photo and a short note, and sharing the day's spending with close friends. The problem: spending happens every day but mostly disappears without a trace, and logging it stays a solo chore. The approach: treat a receipt as the smallest unit of a record, so sharing and conversation follow naturally. Current status: concept stage, defining user scenarios and core screens.">
+    <section class="band band--alt" id="project" data-narrate="프로젝트 섹션. 크리시트, 영수증으로 쓰는 하루 기록. 매일의 영수증을 사진과 짧은 메모로 남기고, 가까운 친구들과 그날의 소비를 나누는 모바일 앱입니다. 문제의식은 소비는 매일 일어나지만 대부분 흔적 없이 사라지고 기록은 혼자만의 숙제로 남는다는 것이고, 접근은 영수증을 기록의 최소 단위로 삼아 공유와 대화가 자연스럽게 따라오도록 설계하는 것입니다. 현재 상태는 컨셉 단계로, 사용자 시나리오와 핵심 화면을 정리하고 있습니다. 이어서 작업 링크 카드가 있습니다." data-narrate-en="Project section. kreceipt, a daily journal written in receipts. A mobile app for keeping each day's receipts with a photo and a short note, and sharing the day's spending with close friends. The problem: spending happens every day but mostly disappears without a trace, and logging it stays a solo chore. The approach: treat a receipt as the smallest unit of a record, so sharing and conversation follow naturally. Current status: concept stage, defining user scenarios and core screens. Work link cards follow below.">
       <div class="container project">
         <div class="reveal">
           <div class="sec-head">
@@ -1382,6 +1453,25 @@
             </dl>
           </div>
         </div>
+
+        <!-- 작업 링크: 구글 시트에 적은 내용이 배포할 때 아래 표시 사이로 들어온다.
+             제목과 안내 문구는 표시 밖에 있어서 EN 전환이 그대로 동작한다. -->
+        <div class="works reveal">
+          <h3 class="works__title" data-en="Work links">작업 링크</h3>
+          <p class="works__note" data-en="Kept in a Google Sheet — the cards below are rebuilt each time the site is deployed.">구글 시트에 적어 두면, 사이트를 배포할 때 아래 카드로 자동으로 들어옵니다.</p>
+          <ul class="works__list">
+            <!-- WORKS:START -->
+              <li class="works__item reveal" style="--wd:0.00s">
+                <a class="works__card" href="https://github.com/Soom260" target="_blank" rel="noopener">
+                  <span class="works__cat">기타</span>
+                  <span class="works__name">GitHub</span>
+                  <span class="works__desc">지금까지 올린 저장소를 모아 둔 곳입니다.</span>
+                  <span class="works__go" aria-hidden="true">↗</span>
+                </a>
+              </li>
+            <!-- WORKS:END -->
+          </ul>
+        </div>
       </div>
     </section>
 
@@ -1408,7 +1498,8 @@
   <footer>
     <div class="container">
       <p data-en="Choi Soomi · 최수미 — Business Administration, HUFS">최수미 · Choi Soomi — 한국외국어대학교 경영학전공</p>
-      <p data-en="Last updated 2026.09 · Portfolio archive">마지막 업데이트 2026.09 · 포트폴리오 아카이브</p>
+      <!-- 날짜는 한/영이 같으므로 번역 대상에서 떼어 두고, 표시 사이만 빌드할 때 채운다 -->
+      <p><span data-en="Last updated">마지막 업데이트</span> <span class="footer__date"><!-- UPDATED:START -->2026.09<!-- UPDATED:END --></span> <span data-en="· Portfolio archive">· 포트폴리오 아카이브</span></p>
     </div>
   </footer>
 

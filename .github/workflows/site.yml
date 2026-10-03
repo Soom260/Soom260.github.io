@@ -1,0 +1,78 @@
+# 구글 시트(게시 CSV)를 읽어 index.html 을 만들고 GitHub Pages 에 올린다.
+#  - 시트를 고친 뒤에는 Actions 탭에서 "Run workflow" 를 눌러야 화면에 반영된다.
+#  - 시트 내용이 잘못되면 main.py 가 실패로 멈추므로, 직전에 성공한 화면이 그대로 유지된다.
+name: Build and deploy site
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  # 매일 자동으로 돌리고 싶으면 아래 3줄의 # 을 지운다.
+  # 한국 시간 08:17 = UTC 23:17 (전날)
+  # schedule:
+  #   - cron: "17 23 * * *"
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 배포는 한 번에 하나만. 돌고 있는 배포는 끝까지 마치게 둔다.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      # 저장소 변수(Settings → Secrets and variables → Actions → Variables)에 등록한
+      # 게시된 CSV 주소를 읽어 온다. 주소를 코드 안에 적지 않는다.
+      SHEET_CSV_URL: ${{ vars.SHEET_CSV_URL }}
+    steps:
+      - name: 저장소 내려받기
+        uses: actions/checkout@v4
+
+      - name: 파이썬 준비
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: 사이트에 올릴 파일만 _site 로 복사
+        # 사이트에 필요 없는 파일(.git, .github, main.py, README, sample.csv 등)은 뺀다.
+        run: |
+          mkdir -p _site
+          rsync -a ./ _site/ \
+            --exclude '.git' \
+            --exclude '.github' \
+            --exclude '_site' \
+            --exclude 'main.py' \
+            --exclude 'README.md' \
+            --exclude 'sample.csv' \
+            --exclude '.gitignore' \
+            --exclude '__pycache__'
+          echo "--- _site 안에 들어간 파일 ---"
+          find _site -maxdepth 2 -type f | sort
+
+      - name: 시트를 읽어 _site/index.html 만들기
+        # index.html 의 WORKS / UPDATED 표시 사이만 바뀐다.
+        run: python main.py --output _site/index.html
+
+      - name: Pages 설정 읽기
+        uses: actions/configure-pages@v5
+
+      - name: 만들어진 _site 올리기
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: GitHub Pages 에 배포
+        id: deployment
+        uses: actions/deploy-pages@v4
