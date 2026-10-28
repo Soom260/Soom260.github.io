@@ -909,6 +909,7 @@
   }
   .project__body > *{min-width:0}
   .project__desc{font-size:1.12rem;line-height:1.65;letter-spacing:-0.015em}
+  .project__links{justify-content:flex-start;margin-top:1.75rem}
   .specs{
     margin-top:2rem;
     display:flex;
@@ -1410,7 +1411,7 @@
       <div class="ticker__track" data-loop><span>문제 정의</span><span class="hot">●</span><span>사용자 흐름</span><span class="hot">●</span><span>핵심 지표</span><span class="hot">●</span><span>설문 · 통계</span><span class="hot">●</span><span>기록과 대화</span><span class="hot">●</span></div>
     </div>
 
-    <section class="band band--alt" id="project" data-narrate="프로젝트 섹션. 크리시트, 영수증으로 쓰는 하루 기록. 매일의 영수증을 사진과 짧은 메모로 남기고, 가까운 친구들과 그날의 소비를 나누는 모바일 앱입니다. 문제의식은 소비는 매일 일어나지만 대부분 흔적 없이 사라지고 기록은 혼자만의 숙제로 남는다는 것이고, 접근은 영수증을 기록의 최소 단위로 삼아 공유와 대화가 자연스럽게 따라오도록 설계하는 것입니다. 현재 상태는 컨셉 단계로, 사용자 시나리오와 핵심 화면을 정리하고 있습니다. 이어서 작업 링크 카드가 있습니다." data-narrate-en="Project section. kreceipt, a daily journal written in receipts. A mobile app for keeping each day's receipts with a photo and a short note, and sharing the day's spending with close friends. The problem: spending happens every day but mostly disappears without a trace, and logging it stays a solo chore. The approach: treat a receipt as the smallest unit of a record, so sharing and conversation follow naturally. Current status: concept stage, defining user scenarios and core screens. Work link cards follow below.">
+    <section class="band band--alt" id="project" data-narrate="프로젝트 섹션. 크리시트, 영수증으로 쓰는 하루 기록. 결제 캡처를 올리면 글자를 인식해 항목을 고르고, 오늘의 기분과 날씨와 노래를 더해 영수증을 만들어 링크나 이미지로 공유하는 웹 서비스입니다. 받은 사람은 보관함에 저장하고 답장 스티커를 남길 수 있습니다. 문제의식은 소비는 매일 일어나지만 대부분 흔적 없이 사라지고, 꾸준한 기록 앱은 금방 지쳐 오래가지 못한다는 것이고, 접근은 영수증을 기록의 최소 단위로 삼아 공유와 대화가 자연스럽게 따라오도록 설계하는 것입니다. 현재 상태는 배포 완료로, 캡처부터 공유와 보관함까지 전체 흐름이 동작합니다. 이어서 작업 링크 카드가 있습니다." data-narrate-en="Project section. kreceipt, a daily journal written in receipts. A web service that reads your uploaded payment capture with OCR, lets you pick the items, adds today's mood, weather and a song, then turns it into a receipt you can share as a link or image. Recipients can save it to their archive and leave a reply sticker. The problem: spending happens every day but mostly disappears without a trace, and steady journaling apps tire people out fast. The approach: treat a receipt as the smallest unit of a record, so sharing and conversation follow naturally. Current status: live and deployed, with the full flow from capture to sharing and archive working end to end. Work link cards follow below.">
       <div class="container project">
         <div class="reveal">
           <div class="sec-head">
@@ -1436,11 +1437,11 @@
             </div>
           </div>
           <div class="project__text reveal">
-            <p class="project__desc" data-en="A mobile app for keeping each day's receipts with a photo and a short note, and sharing the day's spending with close friends. Less the obligation of a ledger, more everyday record and conversation.">매일의 영수증을 사진과 짧은 메모로 남기고, 가까운 친구들과 그날의 소비를 나누는 모바일 앱. 가계부의 의무감 대신 일상의 기록과 대화에 초점을 둡니다.</p>
+            <p class="project__desc" data-en="Upload a payment capture and OCR reads the items — add today's mood, weather and a song, and it becomes a receipt you share as a link or image. Friends who open it can save it to their own archive and leave a reply sticker. Less the obligation of a ledger, more everyday record and conversation.">결제 캡처를 올리면 OCR로 항목을 읽어내고, 오늘의 기분·날씨·노래를 더해 영수증 한 장으로 만듭니다. 링크나 이미지로 보내면 친구는 자기 보관함에 저장하고 답장 스티커도 남길 수 있어요. 가계부의 의무감 대신 일상의 기록과 대화에 초점을 둡니다.</p>
             <dl class="specs">
               <div style="--sd:.1s">
                 <dt data-en="Problem">문제의식</dt>
-                <dd data-en="Spending happens every day but mostly disappears without a trace, and logging it stays a solo chore.">소비는 매일 일어나지만 대부분 흔적 없이 사라지고, 기록은 혼자만의 숙제로 남는다.</dd>
+                <dd data-en="Spending happens every day but mostly disappears without a trace, and steady journaling apps tire people out fast.">소비는 매일 일어나지만 대부분 흔적 없이 사라지고, 꾸준한 기록 앱은 금방 지쳐 오래가지 못한다.</dd>
               </div>
               <div style="--sd:.25s">
                 <dt data-en="Approach">접근</dt>
@@ -1448,9 +1449,12 @@
               </div>
               <div style="--sd:.4s">
                 <dt data-en="Status">현재</dt>
-                <dd data-en="Concept stage — defining user scenarios and core screens (2026)">컨셉 · 아이디어 단계 — 사용자 시나리오와 핵심 화면 정리 중 (2026)</dd>
+                <dd data-en="Live and deployed — capture, OCR, sharing and archive all working end to end (2026.10)">배포 완료 — 캡처·인식부터 공유·보관함까지 전체 흐름 동작 (2026.10)</dd>
               </div>
             </dl>
+            <div class="btn-row project__links">
+              <a class="btn" href="https://soom260.github.io/kreceipt/" target="_blank" rel="noopener noreferrer" data-en="Try kreceipt">kreceipt 써보기</a>
+            </div>
           </div>
         </div>
 
